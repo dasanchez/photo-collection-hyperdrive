@@ -27,6 +27,7 @@ customElements.define('photo-album-app', class extends HTMLElement {
   async load() {
     this.siteInfo = await beaker.hyperdrive.getInfo()
     this.albums = await beaker.hyperdrive.readdir('/albums').catch(e => ([]))
+    this.albums.sort().reverse();
     console.log(this.albums)
 
     this.append(h('header', {},
@@ -38,8 +39,10 @@ customElements.define('photo-album-app', class extends HTMLElement {
         ? h('p', {}, this.siteInfo.description)
         : '',
     ))
-    this.append(h('div', { class: 'albums' }))
-    this.append(h('div', { class: 'photos' }))
+    this.append(h('main', {}, 
+      h('div', {class: 'albums'}, ''),
+      h('div', {class: 'photos'}, '')
+    ));
     this.renderAlbums()
   }
 
@@ -71,6 +74,7 @@ customElements.define('photo-album-app', class extends HTMLElement {
     container.innerHTML = ''
 
     this.photos = await beaker.hyperdrive.readdir(albumPath).catch(e => ([]))
+    this.photos.sort();
     for (let photo of this.photos) {
       container.append(
         h('div', { class: 'photo', click: e => this.doViewModal(e, `${albumPath}/${photo}`) },
