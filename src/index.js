@@ -28,8 +28,7 @@ customElements.define('photo-album-app', class extends HTMLElement {
     this.siteInfo = await beaker.hyperdrive.getInfo()
     this.albums = await beaker.hyperdrive.readdir('/albums').catch(e => ([]))
     this.albums.sort().reverse();
-    console.log(this.albums)
-
+    
     this.append(h('header', {},
       h('h1', {},
         this.siteInfo.title || "My Beaker Photo Collection",
